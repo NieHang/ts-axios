@@ -29,44 +29,76 @@ module.exports = app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}, Ctrl+C to stop`)
 })
 
-router.get('/base/get', function(req, res) {
-  res.json(req.query)
-})
+registerBaseRouter()
+registerErrorRouter()
+registerExtendRouter()
 
-router.post('/base/post', function(req, res) {
-  res.json(req.body)
-})
+function registerBaseRouter() {
+  router.get('/base/get', function(req, res) {
+    res.json(req.query)
+  })
 
-router.post('/base/buffer', function(req, res) {
-  let msg = []
-  req.on('data', chunk => {
-    if (chunk) {
-      msg.push(chunk)
+  router.post('/base/post', function(req, res) {
+    res.json(req.body)
+  })
+
+  router.post('/base/buffer', function(req, res) {
+    let msg = []
+    req.on('data', chunk => {
+      if (chunk) {
+        msg.push(chunk)
+      }
+    })
+    req.on('end', () => {
+      let buf = Buffer.concat(msg)
+      res.json(buf.toJSON())
+    })
+  })
+}
+
+function registerErrorRouter() {
+  router.get('/error/get', function(req, res) {
+    if (Math.random() > 0.5) {
+      res.json({
+        msg: `hello world`
+      })
+    } else {
+      res.status(500)
+      res.end()
     }
   })
-  req.on('end', () => {
-    let buf = Buffer.concat(msg)
-    res.json(buf.toJSON())
+
+  router.get('/error/timeout', function(req, res) {
+    setTimeout(() => {
+      res.json({
+        msg: `hello world`
+      })
+    }, 3000)
   })
-})
+}
 
-router.get('/error/get', function(req, res) {
-  if (Math.random() > 0.5) {
-    res.json({
-      msg: `hello world`
-    })
-  } else {
-    res.status(500)
+function registerExtendRouter() {
+  router.get('/extend/get', function(req, res) {
+    res.json(req.query)
+  })
+  router.delete('/extend/delete', function(req, res) {
     res.end()
-  }
-})
-
-router.get('/error/timeout', function(req, res) {
-  setTimeout(() => {
-    res.json({
-      msg: `hello world`
-    })
-  }, 3000)
-})
+  })
+  router.options('/extend/options', function(req, res) {
+    res.end()
+  })
+  router.head('/extend/head', function(req, res) {
+    res.end()
+  })
+  router.post('/extend/post', function(req, res) {
+    res.json(req.body)
+  })
+  router.put('/extend/put', function(req, res) {
+    res.json(req.body)
+  })
+  router.patch('/extend/patch', function(req, res) {
+    res.json(req.body)
+  })
+}
 
 app.use(router)
