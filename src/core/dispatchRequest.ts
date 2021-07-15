@@ -3,7 +3,7 @@ import { transformRequest, transformResponse } from '../helpers/data'
 import { processHeaders } from '../helpers/headers'
 import { urlBuild } from '../helpers/url'
 import { AxiosPromise, AxiosRequestConfig } from '../types'
-import { xhr } from '../xhr'
+import { xhr } from './xhr'
 
 export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
   processConfig(config)

@@ -32,6 +32,7 @@ module.exports = app.listen(port, () => {
 registerBaseRouter()
 registerErrorRouter()
 registerExtendRouter()
+registerInterceptorRouter()
 
 function registerBaseRouter() {
   router.get('/base/get', function(req, res) {
@@ -108,6 +109,12 @@ function registerExtendRouter() {
         age: 18
       }
     })
+  })
+}
+
+function registerInterceptorRouter() {
+  router.get('/interceptor/get', function(req, res) {
+    res.json('hello')
   })
 }
 
