@@ -1,6 +1,6 @@
 import axios from '../../src/index'
 
-axios({
+axios('/extend/post', {
   url: '/extend/post',
   method: 'post',
   data: {
