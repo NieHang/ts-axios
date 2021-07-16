@@ -13,7 +13,7 @@ export default class InterceptorManger<T> {
     this.interceptors = []
   }
 
-  use(resolved: ResolvedFn<T>, rejected: RejectedFn) {
+  use(resolved: ResolvedFn<T>, rejected: RejectedFn): number {
     this.interceptors.push({
       resolved,
       rejected
