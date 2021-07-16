@@ -7,7 +7,16 @@ export function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
 
-    const { url, data = null, method = 'get', headers, responseType, timeout } = config
+    const {
+      url,
+      data = null,
+      method = 'get',
+      headers,
+      responseType,
+      timeout,
+      cancelToken,
+      withCredentials
+    } = config
 
     if (responseType) {
       xhr.responseType = responseType
@@ -50,6 +59,15 @@ export function xhr(config: AxiosRequestConfig): AxiosPromise {
         xhr.setRequestHeader(name, headers[name])
       }
     })
+
+    if (cancelToken) {
+      cancelToken.promise.then(reason => {
+        xhr.abort()
+        reject(reason)
+      })
+    }
+
+    if (withCredentials) xhr.withCredentials = true
 
     xhr.send(data)
 
